@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.projectdriving.controller.DashboardController"
+            prefWidth="900.0" prefHeight="600.0">
+
+    <!-- Sidebar -->
+    <VBox prefWidth="220.0" spacing="20.0" style="-fx-background-color: #34495e;"
+          AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+
+        <!-- Logo / Title -->
+        <Label text="Driving School" textFill="WHITE" alignment="CENTER" prefHeight="60" prefWidth="220">
+            <font>
+                <Font name="Calibri Bold" size="28.0"/>
+            </font>
+        </Label>
+
+        <!-- Menu Buttons -->
+        <VBox spacing="10" alignment="TOP_CENTER">
+            <!-- Student -->
+            <Button fx:id="btnStudent" text="Students" mnemonicParsing="false" prefWidth="200"
+                    style="-fx-background-color: transparent; -fx-text-fill: WHITE; -fx-font-size: 16px;"
+                    onAction="#btnStudentOnAction">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+
+            <!-- Course -->
+            <Button fx:id="btnCourse" text="Courses" mnemonicParsing="false" prefWidth="200"
+                    style="-fx-background-color: transparent; -fx-text-fill: WHITE; -fx-font-size: 16px;"
+                    onAction="#btnCourseOnAction">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+
+            <!-- Instructor -->
+            <Button fx:id="btnInstructor" text="Instructors" mnemonicParsing="false" prefWidth="200"
+                    style="-fx-background-color: transparent; -fx-text-fill: WHITE; -fx-font-size: 16px;"
+                    onAction="#btnInstructorOnAction">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+
+            <!-- Lesson -->
+            <Button fx:id="btnLesson" text="Lessons" mnemonicParsing="false" prefWidth="200"
+                    style="-fx-background-color: transparent; -fx-text-fill: WHITE; -fx-font-size: 16px;"
+                    onAction="#btnLessonOnAction">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+
+            <!-- Payment -->
+            <Button fx:id="btnPayment" text="Payments" mnemonicParsing="false" prefWidth="200"
+                    style="-fx-background-color: transparent; -fx-text-fill: WHITE; -fx-font-size: 16px;"
+                    onAction="#btnPaymentOnAction">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+        </VBox>
+    </VBox>
+
+    <!-- Main Container -->
+    <AnchorPane fx:id="ancMainContainer" style="-fx-background-color: #ecf0f1;"
+                AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0">
+        <!-- Pages will load dynamically here -->
+    </AnchorPane>
+
+</AnchorPane>
