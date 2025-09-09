@@ -8,4 +8,15 @@ import lombok.*;
 @Getter
 @Setter
 public class StudentTM {
+    private String id;
+
+    private String fullName;
+
+    private String email;
+
+    private String phone;
+
+    private String nic;
+
+    private String course;
 }

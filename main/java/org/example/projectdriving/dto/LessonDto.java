@@ -1,5 +1,6 @@
 package org.example.projectdriving.dto;
 
+import jakarta.persistence.Id;
 import lombok.*;
 
 @AllArgsConstructor
@@ -8,4 +9,11 @@ import lombok.*;
 @Getter
 @Setter
 public class LessonDto {
+
+    private String id;
+
+    private java.time.LocalDateTime startTime;
+    private java.time.LocalDateTime endTime;
+
+    private String status;
 }

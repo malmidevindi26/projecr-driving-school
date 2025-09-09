@@ -7,7 +7,11 @@ module org.example.projectdriving {
     requires static lombok;
 
 
-    opens org.example.projectdriving to jakarta.persistence, org.hibernate.orm.core, javafx.fxml, javafx.base;
+
+    opens org.example.projectdriving.entity to org.hibernate.orm.core;
+    opens org.example.projectdriving.config to jakarta.persistence;
+    opens org.example.projectdriving.controller to javafx.fxml;
+    opens org.example.projectdriving.dto.tm to javafx.base;
 
     exports org.example.projectdriving;
 }
