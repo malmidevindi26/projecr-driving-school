@@ -19,4 +19,6 @@ public interface CrudDAO <T> extends SuperDAO{
     List<String> getAllIds() throws SQLException;
 
     Optional<T> findById(String id) throws SQLException;
+
+    boolean existsByPhoneNumber(String phoneNumber) throws SQLException;
 }

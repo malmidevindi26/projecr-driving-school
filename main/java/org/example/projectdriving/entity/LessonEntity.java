@@ -1,9 +1,6 @@
 package org.example.projectdriving.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -22,4 +19,13 @@ public class LessonEntity {
    private java.time.LocalDateTime endTime;
 
    private String status;
+
+   @ManyToOne
+   @JoinColumn(name = "instructor_id", nullable = false)
+   private InstructorEntity instructor;
+
+   @ManyToOne
+   @JoinColumn(name = "student_id", nullable = false)
+   private StudentEntity student;
+
 }

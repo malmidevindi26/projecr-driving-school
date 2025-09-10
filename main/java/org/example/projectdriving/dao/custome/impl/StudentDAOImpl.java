@@ -120,4 +120,32 @@ public class StudentDAOImpl implements StudentDAO {
            session.close();
        }
     }
+
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber) throws SQLException {
+        Session session = factoryConfiguration.getSession();
+        try {
+            Query<StudentEntity> query = session.createQuery(
+                    "from StudentEntity s where s.phone = :phone", StudentEntity.class);
+
+            query.setParameter("phone", phoneNumber);
+
+            return query.uniqueResultOptional().isPresent();
+
+        }finally {
+            session.close();
+        }
+
+    }
+
+    @Override
+    public Optional<StudentEntity> findByStudentNic(String nic) throws SQLException {
+        Session session = factoryConfiguration.getSession();
+        try {
+            StudentEntity studentEntity = session.get(StudentEntity.class, nic);
+            return Optional.ofNullable(studentEntity);
+        }finally {
+            session.close();
+        }
+    }
 }

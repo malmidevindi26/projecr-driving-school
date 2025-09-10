@@ -118,4 +118,10 @@ public class PaymentDAOImpl implements PaymentDAO {
             session.close();
         }
     }
+
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber) throws SQLException {
+        return false;
+    }
+
 }

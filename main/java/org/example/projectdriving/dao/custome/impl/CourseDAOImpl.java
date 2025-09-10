@@ -119,4 +119,11 @@ public class CourseDAOImpl implements CourseDAO {
             session.close();
         }
     }
+
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber) throws SQLException {
+        return false;
+    }
+
+
 }

@@ -120,4 +120,19 @@ public class InstructorDAOImpl implements InstructorDAO {
             session.close();
         }
     }
+
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber) throws SQLException {
+        Session session =factoryConfiguration.getSession();
+        try {
+            Query<InstructorEntity> query = session.createQuery(
+                    "from InstructorEntity i where i.phone = :phone", InstructorEntity.class);
+
+            query.setParameter("phone", phoneNumber);
+            return  query.uniqueResultOptional().isPresent();
+        }finally {
+            session.close();
+        }
+    }
+
 }

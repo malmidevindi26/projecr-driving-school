@@ -42,4 +42,11 @@ public class EnrollmentDAOImpl implements EnrollmentDAO {
     public Optional<EnrollmentEntity> findById(String id) throws SQLException {
         return Optional.empty();
     }
+
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber) throws SQLException {
+        return false;
+    }
+
+
 }

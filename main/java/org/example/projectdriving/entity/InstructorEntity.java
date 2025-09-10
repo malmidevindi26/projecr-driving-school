@@ -1,10 +1,9 @@
 package org.example.projectdriving.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,9 +20,15 @@ public class InstructorEntity {
     private String fullName;
 
     @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String availabilityNote;
+
+    @OneToMany(mappedBy = "instructor")
+    private List<LessonEntity> lessons;
 
 }

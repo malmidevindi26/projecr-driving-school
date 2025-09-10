@@ -119,4 +119,11 @@ public class LessonDAOImpl implements LessonDAO {
             session.close();
         }
     }
+
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber) throws SQLException {
+        return false;
+    }
+
+
 }
