@@ -1,6 +1,7 @@
 package org.example.projectdriving.controller;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -8,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.example.projectdriving.bo.BOFactory;
 import org.example.projectdriving.bo.BOTypes;
+import org.example.projectdriving.bo.Custom.CourseBO;
 import org.example.projectdriving.bo.Custom.InstructorBO;
 import org.example.projectdriving.bo.exception.DuplicateException;
 import org.example.projectdriving.bo.exception.InUseException;
@@ -16,18 +18,20 @@ import org.example.projectdriving.dto.tm.InstructorTM;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class InstructorController implements Initializable {
 
     private final InstructorBO instructorBO = BOFactory.getInstance().getBO(BOTypes.INSTRUCTOR);
+    private final CourseBO courseBO = BOFactory.getInstance().getBO(BOTypes.COURSE);
 
     public Label lblInstructorId;
     public TextField txtFullName;
     public TextField txtPhone;
     public TextField txtEmail;
-    public TextArea txtAvailability;
+  //  public TextArea txtAvailability;
     public Button btnSave;
     public Button btnUpdate;
     public Button btnDelete;
@@ -37,12 +41,14 @@ public class InstructorController implements Initializable {
     public TableColumn<InstructorTM, String> colFullName;
     public TableColumn<InstructorTM, String> colPhone;
     public TableColumn<InstructorTM, String> colEmail;
-    public TableColumn<InstructorTM, String> colAvailability;
+   // public TableColumn<InstructorTM, String> colAvailability;
 
     private final String namePattern = "^[A-Za-z ]+$";
     private final String nicPattern = "^[0-9]{9}[vVxX]||[0-9]{12}$";
     private final String emailPattern = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     private final String phonePattern = "^(\\d+)||((\\d+\\.)(\\d){2})$";
+    public ComboBox<String> comCourse;
+    public TableColumn<InstructorTM, String> colCourse;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -50,10 +56,11 @@ public class InstructorController implements Initializable {
        colFullName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
        colPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-       colAvailability.setCellValueFactory(new PropertyValueFactory<>("availabilityNote"));
+       colCourse.setCellValueFactory(new PropertyValueFactory<>("course"));
 
        try {
            resetPage();
+           loadCourses();
        } catch (Exception e) {
            new Alert(
                    Alert.AlertType.ERROR, "Fail to load data..!"
@@ -69,7 +76,7 @@ public class InstructorController implements Initializable {
         btnUpdate.setDisable(true);
         btnDelete.setDisable(true);
 
-        txtAvailability.setText("");
+        comCourse.setValue("");
         txtEmail.setText("");
         txtPhone.setText("");
         txtFullName.setText("");
@@ -89,7 +96,7 @@ public class InstructorController implements Initializable {
                                 instructorDto.getFullName(),
                                 instructorDto.getPhone(),
                                 instructorDto.getEmail(),
-                                instructorDto.getAvailabilityNote()
+                                instructorDto.getCourse()
                         )).toList()
         ));
     }
@@ -98,7 +105,7 @@ public class InstructorController implements Initializable {
         String fullName = txtFullName.getText();
         String phone = txtPhone.getText();
         String email = txtEmail.getText();
-        String availabilityNote = txtAvailability.getText();
+        String course = comCourse.getValue();
         String id = lblInstructorId.getText();
 
         boolean isValidName = fullName.matches(namePattern);
@@ -127,7 +134,7 @@ public class InstructorController implements Initializable {
                 fullName,
                 phone,
                 email,
-                availabilityNote
+                course
         );
 
         if(isValidName && isValidEmail && isValidPhone) {
@@ -154,7 +161,7 @@ public class InstructorController implements Initializable {
         String fullName = txtFullName.getText();
         String phone = txtPhone.getText();
         String email = txtEmail.getText();
-        String availabilityNote = txtAvailability.getText();
+        String course = comCourse.getValue();
         String id = lblInstructorId.getText();
 
         boolean isValidName = fullName.matches(namePattern);
@@ -183,7 +190,7 @@ public class InstructorController implements Initializable {
                 fullName,
                 phone,
                 email,
-                availabilityNote
+                course
         );
 
         if(!isValidName && isValidEmail && isValidPhone) {
@@ -252,7 +259,7 @@ public class InstructorController implements Initializable {
             txtFullName.setText(selectItem.getFullName());
             txtPhone.setText(selectItem.getPhone());
             txtEmail.setText(selectItem.getEmail());
-            txtAvailability.setText(selectItem.getAvailabilityNote());
+            comCourse.setValue(selectItem.getCourse());
 
             btnSave.setDisable(true);
             btnUpdate.setDisable(false);
@@ -260,5 +267,11 @@ public class InstructorController implements Initializable {
         }
     }
 
+    private void loadCourses() throws SQLException, ClassNotFoundException {
+        List<String> list = courseBO.getAllCoursesName();
+        ObservableList<String> courses = FXCollections.observableArrayList();
+        courses.addAll(list);
+        comCourse.setItems(courses);
+    }
 
 }

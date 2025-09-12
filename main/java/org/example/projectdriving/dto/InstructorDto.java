@@ -21,6 +21,6 @@ public class InstructorDto {
     private String email;
 
 
-    private String availabilityNote;
+    private String course;
 
 }

@@ -20,6 +20,6 @@ public class InstructorTM {
     private String email;
 
 
-    private String availabilityNote;
+    private String course;
 
 }

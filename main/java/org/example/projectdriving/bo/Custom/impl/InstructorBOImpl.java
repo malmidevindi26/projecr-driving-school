@@ -37,7 +37,7 @@ public class InstructorBOImpl implements InstructorBO {
         }
 
         if (instructorDAO.existsByPhoneNumber(dto.getPhone())){
-            throw new DuplicateException("Phone number already exists");
+            throw new DuplicateException("Duplicate Instructor because the Phone number already exists");
         }
 
         InstructorEntity instructor = converter.getInstructorEntity(dto);

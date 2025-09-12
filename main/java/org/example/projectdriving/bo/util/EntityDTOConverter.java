@@ -30,7 +30,7 @@ public class EntityDTOConverter {
         dto.setFullName(instructorEntity.getFullName());
         dto.setPhone(instructorEntity.getPhone());
         dto.setEmail(instructorEntity.getEmail());
-        dto.setAvailabilityNote(instructorEntity.getAvailabilityNote());
+        dto.setCourse(instructorEntity.getCourse());
         return dto;
     }
     public InstructorEntity getInstructorEntity(InstructorDto dto) {
@@ -39,7 +39,7 @@ public class EntityDTOConverter {
         instructor.setFullName(dto.getFullName());
         instructor.setPhone(dto.getPhone());
         instructor.setEmail(dto.getEmail());
-        instructor.setAvailabilityNote(dto.getAvailabilityNote());
+        instructor.setCourse(dto.getCourse());
         return instructor;
     }
 

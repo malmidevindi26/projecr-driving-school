@@ -78,4 +78,9 @@ public class CourseBOImpl implements CourseBO {
        }
        return tableChar + "001";
     }
+
+    @Override
+    public List<String> getAllCoursesName() throws SQLException, ClassNotFoundException {
+        return courseDAO.getAllIds();
+    }
 }

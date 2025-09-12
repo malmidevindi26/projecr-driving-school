@@ -16,4 +16,6 @@ public interface CourseBO extends SuperBO {
     boolean deleteCourse(String id) throws SQLException;
 
     String getNextId() throws SQLException;
+
+    List<String> getAllCoursesName() throws SQLException, ClassNotFoundException;
 }
