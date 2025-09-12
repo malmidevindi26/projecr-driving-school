@@ -17,4 +17,7 @@ public interface InstructorBO extends SuperBO {
     boolean deleteInstructor(String id) throws SQLException;
 
     String getNextId() throws SQLException;
+
+    List<InstructorDto> getInstructorsByCourse(String courseId) throws SQLException;
+
 }

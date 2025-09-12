@@ -125,5 +125,19 @@ public class CourseDAOImpl implements CourseDAO {
         return false;
     }
 
+    // CourseDAOImpl.java
+    @Override
+    public List<CourseEntity> findCoursesByStudentId(String studentId) throws SQLException {
+        try (Session session = factoryConfiguration.getSession()) {
+            Query<CourseEntity> query = session.createQuery(
+                    "select e.course from EnrollmentEntity e where e.student.id = :studentId",
+                    CourseEntity.class
+            );
+            query.setParameter("studentId", studentId);
+            return query.list();
+        } catch (Exception e) {
+            throw new SQLException("Failed to get courses for student " + studentId, e);
+        }
+    }
 
 }

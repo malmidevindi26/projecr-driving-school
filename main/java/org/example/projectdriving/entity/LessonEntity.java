@@ -10,7 +10,8 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "lessons",
-        indexes = {@Index(columnList = "startTime"), @Index(columnList = "instructor_id"), @Index(columnList = "student_id")})
+        indexes = {@Index(columnList = "startTime"), @Index(columnList = "instructor_id"), @Index(columnList = "student_id"),
+                @Index(columnList = "course_id")})
 public class LessonEntity {
    @Id
    private String id;
@@ -27,5 +28,9 @@ public class LessonEntity {
    @ManyToOne
    @JoinColumn(name = "student_id", nullable = false)
    private StudentEntity student;
+
+   @ManyToOne
+   @JoinColumn(name = "course_id", nullable = false)
+   private CourseEntity course;
 
 }

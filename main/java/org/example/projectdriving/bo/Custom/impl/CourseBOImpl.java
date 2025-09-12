@@ -36,7 +36,7 @@ public class CourseBOImpl implements CourseBO {
         }
 
         CourseEntity course =  converter.getCourseEntity(dto);
-        boolean save = courseDAO.save(course);
+         courseDAO.save(course);
     }
 
     @Override
@@ -83,4 +83,14 @@ public class CourseBOImpl implements CourseBO {
     public List<String> getAllCoursesName() throws SQLException, ClassNotFoundException {
         return courseDAO.getAllIds();
     }
+
+    // CourseBOImpl.java
+    @Override
+    public List<CourseDto> getCoursesByStudent(String studentId) throws SQLException {
+        List<CourseEntity> courses = courseDAO.findCoursesByStudentId(studentId);
+        return courses.stream()
+                .map(converter::getCourseDto)
+                .toList();
+    }
+
 }

@@ -51,7 +51,8 @@
                         <Font name="Calibri Bold" size="13.0"/>
                     </font>
                 </Label>
-                <ComboBox fx:id="cmbCourse" promptText="Select Course" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cmbCourse" promptText="Select Course" HBox.hgrow="ALWAYS"
+                          onAction="#onCourseSelected"/>
             </HBox>
 
             <!-- Instructor -->
@@ -72,7 +73,8 @@
                     </font>
                 </Label>
                 <DatePicker fx:id="dpStartDate" HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="txtStartTime" promptText="HH:mm" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="txtStartTime" promptText="HH:mm" HBox.hgrow="ALWAYS"
+                           onAction="#onStartTimeEntered"/>
             </HBox>
 
             <!-- End Time -->

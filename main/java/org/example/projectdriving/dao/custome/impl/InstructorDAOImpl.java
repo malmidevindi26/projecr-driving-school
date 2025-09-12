@@ -135,4 +135,26 @@ public class InstructorDAOImpl implements InstructorDAO {
         }
     }
 
+//    @Override
+//    public List<InstructorEntity> getInstructorsByCourse(String courseId) throws SQLException {
+//        try (Session session = factoryConfiguration.getSession()) {
+//            // Assuming InstructorEntity has a collection named 'courses' mapped to CourseEntity
+//            Query<InstructorEntity> query = session.createQuery(
+//                    "select i from InstructorEntity i join i.course c where c.id = :courseId", InstructorEntity.class
+//            );
+//            query.setParameter("courseId", courseId);
+//            return query.list();
+//        }
+//    }
+
+    @Override
+    public List<InstructorEntity> findByCourseId(String courseId) throws SQLException {
+        try (Session session = factoryConfiguration.getSession()) {
+            Query<InstructorEntity> query = session.createQuery(
+                    "from InstructorEntity i where i.courses.id = :courseId", InstructorEntity.class);
+            query.setParameter("courseId", courseId);
+            return query.list();
+        }
+    }
+
 }

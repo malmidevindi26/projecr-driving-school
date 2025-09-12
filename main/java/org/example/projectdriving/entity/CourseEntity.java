@@ -1,12 +1,11 @@
 package org.example.projectdriving.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,4 +30,15 @@ public class CourseEntity {
 
     @Column(length = 200)
     private String description;
+
+    @OneToMany(mappedBy = "course")
+    private List<LessonEntity> lessons;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EnrollmentEntity> enrollments;
+
+    // imports omitted
+    @OneToMany(mappedBy = "courses", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InstructorEntity> instructors = new ArrayList<>();
+
 }

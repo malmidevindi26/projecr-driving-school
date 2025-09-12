@@ -1,6 +1,5 @@
 package org.example.projectdriving.dto;
 
-import jakarta.persistence.Id;
 import lombok.*;
 
 @AllArgsConstructor
@@ -14,6 +13,8 @@ public class LessonDto {
 
     private java.time.LocalDateTime startTime;
     private java.time.LocalDateTime endTime;
-
+    private String studentId;
+    private String courseId;
+    private String instructorId;
     private String status;
 }

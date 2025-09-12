@@ -3,16 +3,17 @@ package org.example.projectdriving.bo.Custom;
 import org.example.projectdriving.bo.SuperBO;
 import org.example.projectdriving.dto.LessonDto;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface LessonBO extends SuperBO {
     List<LessonDto> getAllLessons();
 
-    void saveLesson(LessonDto dto);
+    void saveLesson(LessonDto dto) throws SQLException;
 
-    void deleteLesson(String id);
+    boolean deleteLesson(String id) throws SQLException;
 
     boolean updateLesson(LessonDto dto);
 
-    String getNextId();
+    String getNextId() throws SQLException;
 }

@@ -31,4 +31,12 @@ public class InstructorEntity {
     @OneToMany(mappedBy = "instructor")
     private List<LessonEntity> lessons;
 
+    // imports omitted
+    @ManyToOne(fetch = FetchType.LAZY)            // many instructors -> one course
+    @JoinColumn(name = "course_id", nullable = false)
+    private CourseEntity courses;
+
+
+
+
 }

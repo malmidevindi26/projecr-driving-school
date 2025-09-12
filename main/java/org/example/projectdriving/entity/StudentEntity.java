@@ -1,9 +1,9 @@
 package org.example.projectdriving.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +25,7 @@ public class StudentEntity {
     private String nic;
 
     private String course;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EnrollmentEntity> enrollments;
 }

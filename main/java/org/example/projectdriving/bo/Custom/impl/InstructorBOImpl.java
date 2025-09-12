@@ -82,4 +82,12 @@ public class InstructorBOImpl implements InstructorBO {
         }
             return tableChar + "001";
     }
+    @Override
+    public List<InstructorDto> getInstructorsByCourse(String courseId) throws SQLException {
+        List<InstructorEntity> entities = instructorDAO.findByCourseId(courseId);
+        return entities.stream()
+                .map(converter::getInstructorDto)
+                .toList();
+    }
+
 }

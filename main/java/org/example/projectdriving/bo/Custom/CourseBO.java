@@ -18,4 +18,8 @@ public interface CourseBO extends SuperBO {
     String getNextId() throws SQLException;
 
     List<String> getAllCoursesName() throws SQLException, ClassNotFoundException;
+
+    // CourseBO.java
+    List<CourseDto> getCoursesByStudent(String studentId) throws SQLException;
+
 }

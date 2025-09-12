@@ -8,6 +8,8 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -126,4 +128,35 @@ public class LessonDAOImpl implements LessonDAO {
     }
 
 
-}
+    @Override
+    public List<LessonEntity> findByInstructorAndDate(String instructorId, LocalDate date) throws SQLException {
+
+            try (Session session = factoryConfiguration.getSession()) {
+//                Query<LessonEntity> query = session.createQuery(
+//                        "from LessonEntity l where l.instructor.id = :insId and l.startTime = :date",
+//                        LessonEntity.class
+//                );
+//                query.setParameter("insId", instructorId);
+//                query.setParameter("date", date);
+//                return query.list();
+                LocalDateTime dayStart = date.atTime(8, 0);
+                LocalDateTime dayEnd = date.atTime(17, 0);
+
+                Query<LessonEntity> query = session.createQuery(
+                        "from LessonEntity l " +
+                                "where l.instructor.id = :insId " +
+                                "and l.startTime < :dayEnd " +
+                                "and l.endTime > :dayStart",
+                        LessonEntity.class
+                );
+                query.setParameter("insId", instructorId);
+                query.setParameter("dayStart", dayStart);
+                query.setParameter("dayEnd", dayEnd);
+
+                return query.list();
+
+            }
+        }
+
+    }
+

@@ -48,6 +48,9 @@ public class EntityDTOConverter {
         dto.setId(lessonEntity.getId());
         dto.setStartTime(lessonEntity.getStartTime());
         dto.setEndTime(lessonEntity.getEndTime());
+        dto.setStudentId(lessonEntity.getStudent().getId());
+        dto.setCourseId(lessonEntity.getCourse().getId());
+        dto.setInstructorId(lessonEntity.getInstructor().getId());
         dto.setStatus(lessonEntity.getStatus());
         return dto;
     }
@@ -56,6 +59,19 @@ public class EntityDTOConverter {
         lesson.setId(dto.getId());
         lesson.setStartTime(dto.getStartTime());
         lesson.setEndTime(dto.getEndTime());
+
+        StudentEntity student = new StudentEntity();
+        student.setId(dto.getStudentId());
+        lesson.setStudent(student);
+
+        CourseEntity course = new CourseEntity();
+        course.setId(dto.getCourseId());
+        lesson.setCourse(course);
+
+        InstructorEntity instructor = new InstructorEntity();
+        instructor.setId(dto.getInstructorId());
+        lesson.setInstructor(instructor);
+
         lesson.setStatus(dto.getStatus());
         return lesson;
     }
