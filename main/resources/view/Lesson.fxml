@@ -72,7 +72,7 @@
                         <Font name="Calibri Bold" size="13.0"/>
                     </font>
                 </Label>
-                <DatePicker fx:id="dpStartDate" HBox.hgrow="ALWAYS"/>
+                <DatePicker fx:id="dpStartDate" onAction="#onStartDateSelected" prefWidth="150" />
                 <TextField fx:id="txtStartTime" promptText="HH:mm" HBox.hgrow="ALWAYS"
                            onAction="#onStartTimeEntered"/>
             </HBox>

@@ -17,13 +17,14 @@ public class StudentDAOImpl implements StudentDAO {
 
     @Override
     public List<StudentEntity> getAll() throws SQLException {
-        Session session = factoryConfiguration.getSession();
-        try {
-            Query<StudentEntity> query = session.createQuery("from StudentEntity", StudentEntity.class);
+        try (Session session = factoryConfiguration.getSession()) {
+            // Use a fetch join to eagerly load the enrollments collection.
+            Query<StudentEntity> query = session.createQuery(
+                    "select s from StudentEntity s left join fetch s.enrollments",
+                    StudentEntity.class
+            );
             List<StudentEntity> studentList = query.list();
             return studentList;
-        }finally {
-            session.close();
         }
     }
 

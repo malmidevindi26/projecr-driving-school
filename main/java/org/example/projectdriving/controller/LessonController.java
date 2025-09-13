@@ -24,6 +24,7 @@ import org.example.projectdriving.dto.tm.LessonTM;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -69,22 +70,50 @@ public class LessonController implements Initializable {
         colEnd.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
+
         try {
             resetPage();
             setupStudentListener();
-            setupCourseDisplay();
-            loadStudent();
 
             cmbStatus.setItems(FXCollections.observableArrayList(
                     "Scheduled", "Completed", "Cancelled"
             ));
         } catch (Exception e) {
-            new Alert(
-                    Alert.AlertType.ERROR, "Fail to load data..!"
-            ).show();        }
+            new Alert(Alert.AlertType.ERROR, "Fail to load data..!").show();
+        }
+
+        txtStartTime.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                LocalTime start = LocalTime.parse(newValue);
+                LocalTime end = start.plusHours(1);
+
+
+                if (start.isBefore(LocalTime.of(8, 0)) || end.isAfter(LocalTime.of(17, 0))) {
+
+                    System.out.println("Lesson must be between 08:00 and 17:00");
+                    txtEndTime.clear();
+                    return;
+                }
+                txtEndTime.setText(end.toString());
+
+            } catch (Exception e) {
+
+                System.out.println("Invalid time format: " + newValue);
+                txtEndTime.clear();
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void loadAllData() {
+        loadStudents();
+        loadCourses();
+        loadInstructors();
     }
 
     private void resetPage() throws SQLException {
+
+
         loadNextId();
         loadTableData();
 
@@ -92,14 +121,45 @@ public class LessonController implements Initializable {
         btnUpdate.setDisable(true);
         btnSave.setDisable(false);
 
-        cmbStatus.setValue("");
+
+        cmbStudent.setValue(null);
         cmbCourse.setValue(null);
         cmbInstructor.setValue(null);
+
+
+        cmbStatus.setValue(null);
         txtStartTime.setText("");
         txtEndTime.setText("");
         dpStartDate.setValue(null);
         dpEndDate.setValue(null);
 
+
+        loadAllData();
+
+    }
+
+    public void loadCourses() {
+        try {
+            List<CourseDto> courses = courseBO.getAllCourses();
+            cmbCourse.getItems().clear();
+            setupCourseDisplay();
+            cmbCourse.getItems().addAll(courses);
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load courses: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+    }
+
+    public void loadInstructors() {
+        try {
+            List<InstructorDto> instructors = instructorBO.getAllInstructors();
+            cmbInstructor.getItems().clear();
+            setupInstructorDisplay();
+            cmbInstructor.getItems().addAll(instructors);
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load instructors: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
     }
 
     private void loadTableData() {
@@ -119,6 +179,7 @@ public class LessonController implements Initializable {
             tblLesson.setItems(FXCollections.observableArrayList(lessonList));
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Failed to load lessons: " + e.getMessage()).show();
+            e.printStackTrace();
         }
     }
 
@@ -127,22 +188,16 @@ public class LessonController implements Initializable {
         String nextId = lessonBO.getNextId();
         lblLessonId.setText(nextId);
     }
-    public void loadStudent(){
-        try {
-            List<StudentDto> students = studentBO.getAllStudents();
-            cmbStudent.getItems().addAll(students);
 
-        } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Failed to load students: " + e.getMessage()).show();
-        }
-    }
     public void setupStudentListener(){
         cmbStudent.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldStudent, newStudent) -> {
                     if(newStudent != null) {
                         loadCourseForStudent(newStudent);
                     }else {
-                        cmbStudent.getItems().clear();
+
+                        cmbCourse.getItems().clear();
+                        cmbInstructor.getItems().clear();
                     }
                 }
         );
@@ -151,10 +206,12 @@ public class LessonController implements Initializable {
     private void loadCourseForStudent(StudentDto student) {
         try {
             cmbCourse.getItems().clear();
+            setupCourseDisplay();
             List<CourseDto> studentCourses = courseBO.getCoursesByStudent(student.getId());
             cmbCourse.getItems().addAll(studentCourses);
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Failed to load courses for student: " + e.getMessage()).show();
+            e.printStackTrace();
         }
     }
     public void setupCourseDisplay(){
@@ -176,47 +233,42 @@ public class LessonController implements Initializable {
     }
 
     public void btnSaveOnAction(ActionEvent actionEvent) {
+
         String lessonId = lblLessonId.getText();
         StudentDto student = cmbStudent.getValue();
         CourseDto course = cmbCourse.getValue();
         InstructorDto instructor = cmbInstructor.getValue();
         String status = cmbStatus.getValue();
-        LocalDate endDate = dpEndDate.getValue();
         LocalDate startDate = dpStartDate.getValue();
         String startTimeText = txtStartTime.getText();
-        String endTimeText = txtEndTime.getText();
+
 
         if (student == null || course == null || instructor == null || startDate == null ||
-                startTimeText.isEmpty() || endTimeText.isEmpty() || status == null) {
+                startTimeText.isEmpty() || status == null) {
             new Alert(Alert.AlertType.WARNING, "Please fill all required fields!").show();
             return;
         }
 
-        boolean isValidTime = startTimeText.matches("^([01]\\d|2[0-3]):([0-5]\\d)$");
-        txtStartTime.setStyle(txtStartTime.getStyle() + ";-fx-border-color: #BB25B9;");
-
-        if (!isValidTime) {
-            txtStartTime.setStyle(txtStartTime.getStyle() + ";-fx-border-color: red;");
-            new Alert(Alert.AlertType.ERROR, "Invalid start time format. Use HH:mm").show();
-            return;
-        }
-
         try {
-            LocalTime start = LocalTime.parse(startTimeText);
-            LocalTime end = LocalTime.parse(endTimeText);
 
-            if (start.isBefore(LocalTime.of(8, 0)) || end.isAfter(LocalTime.of(17, 0))) {
-                txtStartTime.setStyle(txtStartTime.getStyle() + ";-fx-border-color: red;");
-                new Alert(Alert.AlertType.ERROR, "Lesson must be between 08:00 and 17:00").show();
+            LocalTime start = LocalTime.parse(startTimeText);
+
+            LocalDateTime startDateTime = LocalDateTime.of(startDate, start);
+
+            LocalTime open = LocalTime.of(8, 0);
+            LocalTime close = LocalTime.of(17, 0);
+            LocalTime end = start.plusHours(1);
+
+            if (start.isBefore(open) || end.isAfter(close)) {
+                new Alert(Alert.AlertType.ERROR, "Lesson must be scheduled between 08:00 and 17:00.").show();
                 return;
             }
-            java.time.LocalDateTime startDateTime = java.time.LocalDateTime.of(startDate, start);
-            java.time.LocalDateTime endDateTime = java.time.LocalDateTime.of(endDate, end);
+
 
             LessonDto lessonDto = new LessonDto(
-                   lessonId,
+                    lessonId,
                     startDateTime,
-                    endDateTime,
+                    null,
                     student.getId(),
                     course.getId(),
                     instructor.getId(),
@@ -225,13 +277,18 @@ public class LessonController implements Initializable {
 
             lessonBO.saveLesson(lessonDto);
 
-
             new Alert(Alert.AlertType.INFORMATION, "Lesson saved successfully!").show();
             resetPage();
 
+        } catch (java.time.format.DateTimeParseException e) {
+
+            new Alert(Alert.AlertType.ERROR, "Invalid time format. Please use HH:mm (e.g., 09:00)").show();
+            e.printStackTrace();
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Failed to load lessons: " + e.getMessage()).show();
+            new Alert(Alert.AlertType.ERROR, "Failed to save lesson: " + e.getMessage()).show();
+            e.printStackTrace();
         }
+
     }
 
     public void btnUpdateOnAction(ActionEvent actionEvent) {
@@ -290,6 +347,7 @@ public class LessonController implements Initializable {
 
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Failed to load lessons: " + e.getMessage()).show();
+            e.printStackTrace();
         }
     }
 
@@ -313,14 +371,17 @@ public class LessonController implements Initializable {
                    new Alert(Alert.AlertType.INFORMATION, "Lesson deleted successfully!").show();
                }else {
                    new Alert(Alert.AlertType.ERROR, "Failed to delete lesson!").show();
+
                }
            }catch (InUseException e){
                new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+               e.printStackTrace();
            }catch (Exception e){
                e.printStackTrace();
                new Alert(
                        Alert.AlertType.ERROR, "Fail to delete customer..!"
                ).show();
+
            }
         }
     }
@@ -363,28 +424,21 @@ public class LessonController implements Initializable {
     }
     @FXML
     private void onCourseSelected(ActionEvent event) {
-        CourseDto course = cmbCourse.getSelectionModel().getSelectedItem();
-        LocalDate startDate = dpStartDate.getValue();
 
-        if(course != null) {
+        CourseDto course = cmbCourse.getSelectionModel().getSelectedItem();
+        if (course != null) {
             loadInstructorsForCourse(course);
         }
-
-        if (course != null && startDate != null) {
-            int durationInWeeks = Integer.parseInt(course.getDuration()); // assuming duration in weeks as String
-            dpEndDate.setValue(startDate.plusWeeks(durationInWeeks));
-        }else {
-            cmbCourse.getItems().clear();
-        }
+        updateEndDate();
     }
 
     @FXML
     private void onStartTimeEntered(ActionEvent event) {
         try {
-            LocalTime start = LocalTime.parse(txtStartTime.getText()); // e.g. "09:00"
-            LocalTime end = start.plusHours(1); // lesson duration = 1 hour
+            LocalTime start = LocalTime.parse(txtStartTime.getText());
+            LocalTime end = start.plusHours(1);
 
-            // Validate business hours 08:00-17:00
+
             if (start.isBefore(LocalTime.of(8, 0)) || end.isAfter(LocalTime.of(17, 0))) {
                 new Alert(Alert.AlertType.ERROR, "Lesson must be between 08:00 and 17:00").show();
                 txtEndTime.clear();
@@ -394,18 +448,93 @@ public class LessonController implements Initializable {
             txtEndTime.setText(end.toString());
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Invalid start time format. Use HH:mm").show();
+            e.printStackTrace();
         }
     }
 
     private void loadInstructorsForCourse(CourseDto course) {
         try {
             cmbInstructor.getItems().clear();
+            setupInstructorDisplay();
             List<InstructorDto> instructors = instructorBO.getInstructorsByCourse(course.getId());
             cmbInstructor.getItems().addAll(instructors);
-
-
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Failed to load instructors: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+    }
+
+    private void setupStudentDisplay() {
+
+        cmbStudent.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(StudentDto item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getId() + " - " + item.getFullName());
+            }
+        });
+
+
+        cmbStudent.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(StudentDto item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getId() + " - " + item.getFullName());
+            }
+        });
+    }
+
+    public void loadStudents() {
+        try {
+            List<StudentDto> students = studentBO.getAllStudents();
+            cmbStudent.getItems().clear();
+
+
+            setupStudentDisplay();
+
+
+            cmbStudent.getItems().addAll(students);
+
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load students: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+    }
+    private void setupInstructorDisplay() {
+        cmbInstructor.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(InstructorDto item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getFullName());
+            }
+        });
+
+        cmbInstructor.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(InstructorDto item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getFullName());
+            }
+        });
+    }
+
+
+    public void onStartDateSelected(ActionEvent actionEvent) {
+        updateEndDate();
+    }
+
+    private void updateEndDate() {
+        CourseDto course = cmbCourse.getSelectionModel().getSelectedItem();
+        LocalDate startDate = dpStartDate.getValue();
+
+        if (course != null && startDate != null) {
+            try {
+                int durationInWeeks = Integer.parseInt(course.getDuration());
+                dpEndDate.setValue(startDate.plusWeeks(durationInWeeks));
+            } catch (NumberFormatException e) {
+                new Alert(Alert.AlertType.ERROR, "Invalid course duration format. Please enter a valid number of weeks.").show();
+                e.printStackTrace();
+            }
         }
     }
 

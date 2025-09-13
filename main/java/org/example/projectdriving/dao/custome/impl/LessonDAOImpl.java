@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class LessonDAOImpl implements LessonDAO {
     private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
-    private final Session session = factoryConfiguration.getSession();
+
     @Override
     public List<LessonEntity> getAll() throws SQLException {
         Session session = factoryConfiguration.getSession();
@@ -45,6 +45,7 @@ public class LessonDAOImpl implements LessonDAO {
 
     @Override
     public boolean save(LessonEntity lessonEntity) throws SQLException {
+        Session session =  factoryConfiguration.getSession();
         Transaction transaction = session.beginTransaction();
         try {
             session.persist(lessonEntity);
@@ -132,13 +133,7 @@ public class LessonDAOImpl implements LessonDAO {
     public List<LessonEntity> findByInstructorAndDate(String instructorId, LocalDate date) throws SQLException {
 
             try (Session session = factoryConfiguration.getSession()) {
-//                Query<LessonEntity> query = session.createQuery(
-//                        "from LessonEntity l where l.instructor.id = :insId and l.startTime = :date",
-//                        LessonEntity.class
-//                );
-//                query.setParameter("insId", instructorId);
-//                query.setParameter("date", date);
-//                return query.list();
+
                 LocalDateTime dayStart = date.atTime(8, 0);
                 LocalDateTime dayEnd = date.atTime(17, 0);
 

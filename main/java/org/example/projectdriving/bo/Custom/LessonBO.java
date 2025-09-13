@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface LessonBO extends SuperBO {
-    List<LessonDto> getAllLessons();
+    List<LessonDto> getAllLessons() throws SQLException;
 
     void saveLesson(LessonDto dto) throws SQLException;
 
