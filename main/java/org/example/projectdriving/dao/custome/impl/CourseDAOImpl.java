@@ -102,7 +102,7 @@ public class CourseDAOImpl implements CourseDAO {
     public List<String> getAllIds() throws SQLException {
         Session session = factoryConfiguration.getSession();
         try {
-            Query<String> query = session.createQuery("select cou.fullName from StudentEntity cou", String.class);
+            Query<String> query = session.createQuery("select c.id from CourseEntity c", String.class);
             return query.list();
         }finally {
             session.close();

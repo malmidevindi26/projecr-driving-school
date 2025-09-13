@@ -193,7 +193,7 @@ public class InstructorController implements Initializable {
                 course
         );
 
-        if(!isValidName && isValidEmail && isValidPhone) {
+        if(isValidName && isValidEmail && isValidPhone) {
             try {
                 instructorBO.updateInstructor(instructorDto);
                 resetPage();
@@ -273,5 +273,8 @@ public class InstructorController implements Initializable {
         courses.addAll(list);
         comCourse.setItems(courses);
     }
+
+    /// ///////////////
+
 
 }

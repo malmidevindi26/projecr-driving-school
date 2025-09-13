@@ -40,7 +40,11 @@ public class EntityDTOConverter {
         dto.setFullName(instructorEntity.getFullName());
         dto.setPhone(instructorEntity.getPhone());
         dto.setEmail(instructorEntity.getEmail());
-        dto.setCourse(instructorEntity.getCourse());
+       // dto.setCourse(instructorEntity.getCourse());
+        if (instructorEntity.getCourses() != null) {
+            dto.setCourse(instructorEntity.getCourses().getId());
+        }
+
         return dto;
     }
     public InstructorEntity getInstructorEntity(InstructorDto dto) {
@@ -49,7 +53,10 @@ public class EntityDTOConverter {
         instructor.setFullName(dto.getFullName());
         instructor.setPhone(dto.getPhone());
         instructor.setEmail(dto.getEmail());
-        instructor.setCourse(dto.getCourse());
+
+        CourseEntity course = new CourseEntity();
+        course.setId(dto.getCourse());
+        instructor.setCourses(course);
         return instructor;
     }
 

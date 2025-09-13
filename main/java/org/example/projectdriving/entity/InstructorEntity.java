@@ -25,8 +25,8 @@ public class InstructorEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String course;
+//    @Column(nullable = false)
+//    private String course;
 
     @OneToMany(mappedBy = "instructor")
     private List<LessonEntity> lessons;

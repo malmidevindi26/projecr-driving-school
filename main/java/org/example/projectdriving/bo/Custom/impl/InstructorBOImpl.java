@@ -6,8 +6,10 @@ import org.example.projectdriving.bo.exception.NotFoundException;
 import org.example.projectdriving.bo.util.EntityDTOConverter;
 import org.example.projectdriving.dao.DAOFactory;
 import org.example.projectdriving.dao.DAOTypes;
+import org.example.projectdriving.dao.custome.CourseDAO;
 import org.example.projectdriving.dao.custome.InstructorDAO;
 import org.example.projectdriving.dto.InstructorDto;
+import org.example.projectdriving.entity.CourseEntity;
 import org.example.projectdriving.entity.InstructorEntity;
 
 import java.sql.SQLException;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class InstructorBOImpl implements InstructorBO {
+    private final CourseDAO courseDAO = DAOFactory.getInstance().getDAO(DAOTypes.COURSE);
     private final InstructorDAO instructorDAO = DAOFactory.getInstance().getDAO(DAOTypes.INSTRUCTOR);
     private final EntityDTOConverter converter = new EntityDTOConverter();
     @Override
@@ -41,17 +44,35 @@ public class InstructorBOImpl implements InstructorBO {
         }
 
         InstructorEntity instructor = converter.getInstructorEntity(dto);
+        /// /
+        String couseId = dto.getCourse();
+        CourseEntity course = courseDAO.findById(couseId)
+                .orElseThrow(() -> new NotFoundException("Course not found"));
+
+        instructor.setCourses(course);
+
+        System.out.println("Saving Instructor: " + instructor.getId() +
+                " -> " + instructor.getFullName() +
+                " | Course: " + instructor.getCourses().getId());
         boolean save = instructorDAO.save(instructor);
     }
 
     @Override
     public void updateInstructor(InstructorDto dto) throws SQLException {
-        Optional<InstructorEntity> optionalInstructor = instructorDAO.findById(dto.getId());
-        if(optionalInstructor.isEmpty()){
-            throw new NotFoundException("Instructor not found");
-        }
+        InstructorEntity instructor = instructorDAO.findById(dto.getId())
+                .orElseThrow(() -> new NotFoundException("Instructor not found"));
 
-       InstructorEntity instructor = converter.getInstructorEntity(dto);
+        // Update fields
+        instructor.setFullName(dto.getFullName());
+        instructor.setPhone(dto.getPhone());
+        instructor.setEmail(dto.getEmail());
+
+        // Update course
+        CourseEntity course = courseDAO.findById(dto.getCourse())
+                .orElseThrow(() -> new NotFoundException("Course not found: " + dto.getCourse()));
+        instructor.setCourses(course);
+
+        // Update in DB
         instructorDAO.update(instructor);
     }
 
