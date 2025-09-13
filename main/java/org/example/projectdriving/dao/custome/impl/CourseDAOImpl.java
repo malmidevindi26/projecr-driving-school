@@ -125,7 +125,7 @@ public class CourseDAOImpl implements CourseDAO {
         return false;
     }
 
-    // CourseDAOImpl.java
+
     @Override
     public List<CourseEntity> findCoursesByStudentId(String studentId) throws SQLException {
         try (Session session = factoryConfiguration.getSession()) {
@@ -139,5 +139,10 @@ public class CourseDAOImpl implements CourseDAO {
             throw new SQLException("Failed to get courses for student " + studentId, e);
         }
     }
+
+    //////////////////////////
+
+
+    ///////////////////////////
 
 }

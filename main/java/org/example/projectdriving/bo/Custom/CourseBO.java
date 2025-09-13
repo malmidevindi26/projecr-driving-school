@@ -23,3 +23,5 @@ public interface CourseBO extends SuperBO {
     List<CourseDto> getCoursesByStudent(String studentId) throws SQLException;
 
 }
+
+

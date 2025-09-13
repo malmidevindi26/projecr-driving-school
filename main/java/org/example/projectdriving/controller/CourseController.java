@@ -42,7 +42,7 @@ public class CourseController implements Initializable {
     public TableColumn <CourseTM,String>colDuration;
     public TableColumn <CourseTM, BigDecimal>colFee;
     public TableColumn <CourseTM,String>colDescription;
-    public ComboBox <String>comCourse;
+   // public ComboBox <String>comCourse;
 
     private final String numberPattern = "^(0|[1-9][0-9]*)(\\.[0-9]+)?$";
     private final Map<String, CourseDto> courseMap = new HashMap<>();
@@ -104,7 +104,7 @@ public class CourseController implements Initializable {
 
 
     public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException {
-        String name = comCourse.getValue();
+        String name = txtName.getText();
         String duration = txtDuration.getText();
         String feeText = txtFee.getText();
         String description = txtDescription.getText();
@@ -149,7 +149,7 @@ public class CourseController implements Initializable {
     }
 
     public void btnUpdateOnAction(ActionEvent actionEvent) {
-        String name = comCourse.getValue();
+        String name =txtName.getText();
         String duration = txtDuration.getText();
         String feeText = txtFee.getText();
         String description = txtDescription.getText();

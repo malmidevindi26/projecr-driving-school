@@ -1,8 +1,6 @@
 package org.example.projectdriving.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -26,4 +24,8 @@ public class PaymentEntity {
     private String status;
 
     private String reference;
+
+    @ManyToOne
+    //@JoinColumn(name = "payment_id", nullable = false)
+    private StudentEntity student;
 }

@@ -4,6 +4,7 @@ import org.example.projectdriving.bo.Custom.CourseBO;
 import org.example.projectdriving.bo.exception.DuplicateException;
 import org.example.projectdriving.bo.exception.NotFoundException;
 import org.example.projectdriving.bo.util.EntityDTOConverter;
+import org.example.projectdriving.config.FactoryConfiguration;
 import org.example.projectdriving.dao.DAOFactory;
 import org.example.projectdriving.dao.DAOTypes;
 import org.example.projectdriving.dao.custome.CourseDAO;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CourseBOImpl implements CourseBO {
+    private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
     private final CourseDAO courseDAO = DAOFactory.getInstance().getDAO(DAOTypes.COURSE);
     private final EntityDTOConverter converter = new EntityDTOConverter();
     @Override

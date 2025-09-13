@@ -3,26 +3,36 @@ package org.example.projectdriving.bo.util;
 import org.example.projectdriving.dto.*;
 import org.example.projectdriving.entity.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class EntityDTOConverter {
 
-    public StudentDto getStudentDto(StudentEntity studentEntity) {
-        StudentDto dto = new StudentDto();
-        dto.setId(studentEntity.getId());
-        dto.setFullName(studentEntity.getFullName());
-        dto.setEmail(studentEntity.getEmail());
-        dto.setPhone(studentEntity.getPhone());
-        dto.setCourse(studentEntity.getCourse());
-        return dto;
+    public StudentDto getStudentDto(StudentEntity entity) {
+        List<String> courseIds = entity.getEnrollments().stream()
+                .map(enrollment -> enrollment.getCourse().getId())
+                .toList();
+
+        return new StudentDto(
+                entity.getId(),
+                entity.getFullName(),
+                entity.getNic(),
+                entity.getEmail(),
+                entity.getPhone(),
+                courseIds
+        );
     }
-    public StudentEntity getStudentEntity(StudentDto dto) {
+    public StudentEntity getStudentEntity(StudentDto dto, List<CourseEntity> coursesFromDB) {
         StudentEntity student = new StudentEntity();
         student.setId(dto.getId());
         student.setFullName(dto.getFullName());
         student.setEmail(dto.getEmail());
         student.setPhone(dto.getPhone());
-        student.setCourse(dto.getCourse());
+        student.setNic(dto.getNic());
+        // enrollments added manually in StudentBOImpl
         return student;
     }
+
 
     public InstructorDto getInstructorDto(InstructorEntity instructorEntity) {
         InstructorDto dto = new InstructorDto();

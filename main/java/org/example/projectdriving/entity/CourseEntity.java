@@ -32,10 +32,10 @@ public class CourseEntity {
     private String description;
 
     @OneToMany(mappedBy = "course")
-    private List<LessonEntity> lessons;
+    private List<LessonEntity> lessons = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EnrollmentEntity> enrollments;
+    private List<EnrollmentEntity> enrollments = new ArrayList<>();
 
     // imports omitted
     @OneToMany(mappedBy = "courses", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -24,8 +24,14 @@ public class StudentEntity {
 
     private String nic;
 
-    private String course;
+  //  private String course;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EnrollmentEntity> enrollments;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LessonEntity> lessons;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PaymentEntity> payments;
 }

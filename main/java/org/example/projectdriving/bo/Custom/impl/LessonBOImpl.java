@@ -140,7 +140,7 @@ public class LessonBOImpl implements LessonBO {
 
     @Override
     public String getNextId() throws SQLException {
-        String lastId = courseDAO.getLastId();
+        String lastId = lessonDAO.getLastId();
         char tableChar = 'L';
         if(lastId != null){
             String lastIdNumberString = lastId.substring(1);
