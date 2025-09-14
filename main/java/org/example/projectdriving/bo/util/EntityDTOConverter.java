@@ -98,8 +98,13 @@ public class EntityDTOConverter {
         dto.setId(paymentEntity.getId());
         dto.setAmount(paymentEntity.getAmount());
         dto.setMethod(paymentEntity.getMethod());
-        dto.setStatus(paymentEntity.getStatus());
+        dto.setCourse(paymentEntity.getCourse());
         dto.setReference(paymentEntity.getReference());
+
+        // Correctly get studentId and enrollment
+        dto.setStudentId(paymentEntity.getStudent() != null ? paymentEntity.getStudent().getId() : null);
+        dto.setEnrollment(paymentEntity.getEnrollment());
+
         return dto;
     }
     public PaymentEntity getPaymentEntity(PaymentDto dto) {
@@ -107,8 +112,13 @@ public class EntityDTOConverter {
         payment.setId(dto.getId());
         payment.setAmount(dto.getAmount());
         payment.setMethod(dto.getMethod());
-        payment.setStatus(dto.getStatus());
+        payment.setCourse(dto.getCourse());
         payment.setReference(dto.getReference());
+
+        // Correctly set the enrollment field
+        payment.setEnrollment(dto.getEnrollment());
+
+        // The StudentEntity relationship is handled in the BO layer.
         return payment;
     }
 

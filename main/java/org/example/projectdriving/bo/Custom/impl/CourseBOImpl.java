@@ -86,7 +86,6 @@ public class CourseBOImpl implements CourseBO {
         return courseDAO.getAllIds();
     }
 
-    // CourseBOImpl.java
     @Override
     public List<CourseDto> getCoursesByStudent(String studentId) throws SQLException {
         List<CourseEntity> courses = courseDAO.findCoursesByStudentId(studentId);

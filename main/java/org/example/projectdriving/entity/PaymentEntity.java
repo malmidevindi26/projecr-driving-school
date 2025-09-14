@@ -21,8 +21,9 @@ public class PaymentEntity {
 
     private String method;
 
-    private String status;
+    private String course;
 
+    private String enrollment;
     private String reference;
 
     @ManyToOne

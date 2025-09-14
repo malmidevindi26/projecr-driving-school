@@ -1,13 +1,17 @@
 package org.example.projectdriving.dao.custome.impl;
 
+import org.example.projectdriving.config.FactoryConfiguration;
 import org.example.projectdriving.dao.custome.EnrollmentDAO;
 import org.example.projectdriving.entity.EnrollmentEntity;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 public class EnrollmentDAOImpl implements EnrollmentDAO {
+    private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
     @Override
     public List<EnrollmentEntity> getAll() throws SQLException {
         return List.of();
@@ -49,4 +53,16 @@ public class EnrollmentDAOImpl implements EnrollmentDAO {
     }
 
 
+    @Override
+    public Optional<EnrollmentEntity> findByStudentAndCourse(String studentId, String courseName) {
+        try (Session session = factoryConfiguration.getSession()) {
+            Query<EnrollmentEntity> query = session.createQuery(
+                    "from EnrollmentEntity e where e.student.id = :studentId and e.course.name = :courseName",
+                    EnrollmentEntity.class
+            );
+            query.setParameter("studentId", studentId);
+            query.setParameter("courseName", courseName);
+            return query.uniqueResultOptional();
+        }
+    }
 }

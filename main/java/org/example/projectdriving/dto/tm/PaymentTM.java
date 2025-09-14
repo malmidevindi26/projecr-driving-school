@@ -16,7 +16,11 @@ public class PaymentTM {
 
     private String method;
 
-    private String status;
+    private String course;
 
     private String reference;
+
+    private String studentId;
+
+    private String enrollment;
 }

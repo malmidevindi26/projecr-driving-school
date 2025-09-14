@@ -35,37 +35,7 @@ public class StudentBOImpl implements StudentBO {
         return dtos;
     }
 
-//    @Override
-//    public boolean saveStudent(StudentDto dto) throws SQLException {
-//        Session session = factoryConfiguration.getSession();
-//        Transaction transaction = session.beginTransaction();
-//        try {
-//            StudentEntity studentEntity = converter.getStudentEntity(dto);
-//
-//
-//            CourseEntity course = session.get(CourseEntity.class, dto.getCourseId());
-//
-//
-//            EnrollmentEntity enrollment = new EnrollmentEntity();
-//            enrollment.setStudent(studentEntity);
-//            enrollment.setCourse(course);
-//            enrollment.setDate(new Date());
-//            enrollment.setAmount(course.getFee());
-//
-//
-//            studentEntity.getEnrollments().add(enrollment);
-//            course.getEnrollments().add(enrollment);
-//
-//            session.persist(studentEntity);
-//            transaction.commit();
-//            return true;
-//        } catch (Exception e) {
-//            if (transaction != null) transaction.rollback();
-//            throw new SQLException("Failed to save student with enrollment", e);
-//        } finally {
-//            session.close();
-//        }
-//    }
+
 @Override
 public boolean saveStudent(StudentDto dto) throws SQLException {
     Session session = factoryConfiguration.getSession();
@@ -89,8 +59,8 @@ public boolean saveStudent(StudentDto dto) throws SQLException {
         // 3. Create EnrollmentEntity for each course
         for (CourseEntity course : courseEntities) {
             EnrollmentEntity enrollment = new EnrollmentEntity();
-            enrollment.setStudent(studentEntity); // link to student
-            enrollment.setCourse(course);          // link to course
+            enrollment.setStudent(studentEntity);
+            enrollment.setCourse(course);
             enrollment.setDate(new Date());
             enrollment.setAmount(course.getFee());
 
@@ -117,46 +87,7 @@ public boolean saveStudent(StudentDto dto) throws SQLException {
     }
 }
 
-//    @Override
-//    public boolean updateStudent(StudentDto dto) throws SQLException {
-//        Session session = factoryConfiguration.getSession();
-//        Transaction transaction = session.beginTransaction();
-//
-//        try {
-//            StudentEntity existing = session.get(StudentEntity.class, dto.getId());
-//            if (existing ==  null) {
-//                return false;
-//            }
-//
-//            existing.setFullName(dto.getFullName());
-//            existing.setEmail(dto.getEmail());
-//            existing.setPhone(dto.getPhone());
-//            existing.setNic(dto.getNic());
-//
-//            CourseEntity newCourse = session.get(CourseEntity.class, dto.getCourseId());
-//            boolean alreadyEnrolled = existing.getEnrollments().stream()
-//                    .anyMatch(e -> e.getCourse().getId().equals(newCourse.getId()));
-//
-//            if(!alreadyEnrolled) {
-//                EnrollmentEntity enrollment = new EnrollmentEntity();
-//                enrollment.setStudent(existing);
-//                enrollment.setCourse(newCourse);
-//                enrollment.setDate(new Date());
-//                enrollment.setAmount(newCourse.getFee());
-//
-//                existing.getEnrollments().add(enrollment);
-//                newCourse.getEnrollments().add(enrollment);
-//            }
-//            session.merge(existing);
-//            transaction.commit();
-//            return true;
-//        } catch (Exception e) {
-//            if (transaction != null) transaction.rollback();
-//            throw new SQLException("Failed to update student", e);
-//        }finally {
-//            session.close();
-//        }
-//    }
+
 @Override
 public boolean updateStudent(StudentDto dto) throws SQLException {
     Session session = factoryConfiguration.getSession();

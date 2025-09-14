@@ -4,5 +4,8 @@ import org.example.projectdriving.dao.CrudDAO;
 import org.example.projectdriving.entity.CourseEntity;
 import org.example.projectdriving.entity.EnrollmentEntity;
 
+import java.util.Optional;
+
 public interface EnrollmentDAO extends CrudDAO<EnrollmentEntity> {
+    Optional<EnrollmentEntity> findByStudentAndCourse(String studentId, String courseName);
 }

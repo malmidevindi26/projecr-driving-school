@@ -124,4 +124,27 @@ public class PaymentDAOImpl implements PaymentDAO {
         return false;
     }
 
+    @Override
+    public List<PaymentEntity> findPaymentsByStudentId(String studentId) throws SQLException {
+        try (Session session = factoryConfiguration.getSession()) {
+            Query<PaymentEntity> query = session.createQuery(
+                    "from PaymentEntity p where p.student.id = :studentId",
+                    PaymentEntity.class
+            );
+            query.setParameter("studentId", studentId);
+            return query.list();
+        }
+    }
+
+    @Override
+    public List<PaymentEntity> findPaymentsByStudentIdAndCourse(String studentId, String courseName) throws SQLException {
+       try (Session session = factoryConfiguration.getSession()) {
+           Query<PaymentEntity> query = session.createQuery(
+                   "from PaymentEntity p where p.student.id = :studentId and p.course = :courseName", PaymentEntity.class
+           );
+           query.setParameter("studentId", studentId);
+           query.setParameter("courseName", courseName);
+           return query.list();
+       }
+    }
 }
