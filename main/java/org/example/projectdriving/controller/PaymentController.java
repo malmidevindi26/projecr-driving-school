@@ -227,7 +227,7 @@ public class PaymentController implements Initializable {
 
     }
 
-    private void resetPage() {
+    private void resetPage() throws SQLException {
         cmbStudent.setValue(null);
         cmbCourse.setValue(null);
         cmbMethod.setValue(null);
@@ -235,6 +235,12 @@ public class PaymentController implements Initializable {
         txtAmount.setText("");
         txtReference.setText("");
         cmbEnrollment.setDisable(true);
+
+
+        btnDelete.setDisable(true);
+        btnUpdate.setDisable(true);
+        btnSave.setDisable(false);
+        loadNextId();
     }
 
     public void btnUpdateOnAction(ActionEvent actionEvent) {
@@ -308,7 +314,7 @@ public class PaymentController implements Initializable {
         }
     }
 
-    public void btnResetOnAction(ActionEvent actionEvent) {
+    public void btnResetOnAction(ActionEvent actionEvent) throws SQLException {
         resetPage();
     }
 
