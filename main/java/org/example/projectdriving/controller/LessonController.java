@@ -387,6 +387,7 @@ public class LessonController implements Initializable {
     }
 
     public void btnResetOnAction(ActionEvent actionEvent) throws SQLException {
+        resetPage();
         loadNextId();
         loadTableData();
     }
@@ -395,6 +396,7 @@ public class LessonController implements Initializable {
         LessonTM selectedItem = tblLesson.getSelectionModel().getSelectedItem();
         if(selectedItem != null) {
             lblLessonId.setText(selectedItem.getId());
+
             StudentDto student = cmbStudent.getItems().stream()
                     .filter(s -> s.getId().equals(selectedItem.getStudentId()))
                     .findFirst()
@@ -414,6 +416,22 @@ public class LessonController implements Initializable {
             cmbInstructor.setValue(instructor);
 
             cmbStatus.setValue(selectedItem.getStatus());
+
+            if(selectedItem.getStartTime() != null) {
+                dpStartDate.setValue(selectedItem.getStartTime().toLocalDate());
+                txtStartTime.setText(selectedItem.getStartTime().toLocalTime().toString());
+            } else {
+                dpStartDate.setValue(null);
+                txtStartTime.setText("");
+            }
+
+            if(selectedItem.getEndTime() != null) {
+                dpEndDate.setValue(selectedItem.getEndTime().toLocalDate());
+                txtEndTime.setText(selectedItem.getEndTime().toLocalTime().toString());
+            }else {
+                dpEndDate.setValue(null);
+                txtEndTime.setText("");
+            }
 
             btnSave.setDisable(true);
             btnUpdate.setDisable(false);
