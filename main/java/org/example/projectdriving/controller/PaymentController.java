@@ -88,17 +88,32 @@ public class PaymentController implements Initializable {
 
         if(studentId != null && course != null){
             try {
-                boolean ifFullPaid = paymentBO.isFullPaymentCompleted(studentId);
+                boolean ifFullPaid = paymentBO.isFullPaymentCompleted(studentId, course);
                 int installmentCount = paymentBO.getPaidInstallments(studentId, course);
 
                 if(ifFullPaid || installmentCount >=3){
                     new Alert(Alert.AlertType.INFORMATION, studentId + " student has completed the full payment ! ").show();
                     cmbEnrollment.setDisable(true);
-                    txtAmount.setText("");
+                    txtAmount.setText("0.00");
+                    cmbEnrollment.getSelectionModel().clearSelection();
                 }else {
                     cmbEnrollment.setDisable(false);
+
+                    ObservableList<String> enrollmentOptions = FXCollections.observableArrayList("Full Payment", "Enrollment");
+
+                    if(installmentCount > 0){
+                        enrollmentOptions.remove("Full Payment");
+
+                        cmbEnrollment.setItems(enrollmentOptions);
+                        cmbEnrollment.getSelectionModel().select("Enrollment");
+                    }else {
+                        cmbEnrollment.setItems(enrollmentOptions);
+                    }
+                    cmbEnrollment.getSelectionModel().clearSelection();
+                    txtAmount.setText("");
                 }
             } catch (SQLException e) {
+                new Alert(Alert.AlertType.ERROR, "Failed to check payment status: ").show();
                 e.printStackTrace();
             }
         }

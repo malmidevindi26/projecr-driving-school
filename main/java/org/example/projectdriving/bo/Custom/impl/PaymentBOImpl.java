@@ -109,4 +109,11 @@ public class PaymentBOImpl implements PaymentBO {
        Optional<EnrollmentEntity> enrollment = enrollmentDAO.findByStudentAndCourse(studentId, courseName);
        return enrollment.map(EnrollmentEntity::getAmount).orElse(BigDecimal.ZERO);
     }
+
+    @Override
+    public boolean isFullPaymentCompleted(String studentId, String courseName) throws SQLException {
+        List<PaymentEntity>  payments = paymentDAO.findPaymentsByStudentIdAndCourse(studentId, courseName);
+        return payments.stream()
+                .anyMatch(p -> "Full Payment".equals(p.getEnrollment()));
+    }
 }

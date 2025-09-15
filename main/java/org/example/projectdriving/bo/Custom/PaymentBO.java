@@ -30,5 +30,7 @@ public interface PaymentBO extends SuperBO {
     int getPaidInstallments(String studentId, String courseId) throws SQLException;
 
     BigDecimal getEnrolledCourseFee(String studentId, String courseName) throws SQLException;
+
+    public boolean isFullPaymentCompleted(String studentId, String courseName) throws SQLException;
 }
 
