@@ -113,13 +113,7 @@ public class StudentDAOImpl implements StudentDAO {
 
     @Override
     public Optional<StudentEntity> findById(String id) throws SQLException {
-//        Session session = factoryConfiguration.getSession();
-//       try {
-//           StudentEntity studentEntity = session.get(StudentEntity.class, id);
-//           return Optional.ofNullable(studentEntity);
-//       }finally {
-//           session.close();
-//       }
+
         try (Session session = factoryConfiguration.getSession()) {
             Query<StudentEntity> query = session.createQuery(
                     "from StudentEntity s left join fetch s.enrollments where s.id = :id",

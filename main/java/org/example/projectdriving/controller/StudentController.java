@@ -163,7 +163,6 @@ public class StudentController implements Initializable {
     public void btnSaveOnAction(ActionEvent actionEvent) {
            List<CourseDto> selectedCourses = List.of(cmbCourse.getValue());
         try {
-         //  CourseDto selectedCourses = cmbCourse.getValue();
             if (selectedCourses == null || selectedCourses.isEmpty()) {
                new Alert(Alert.AlertType.ERROR, "Please select a course").show();
                 return;
@@ -189,12 +188,24 @@ public class StudentController implements Initializable {
     }
 
     public void btnUpdateOnAction(ActionEvent actionEvent) {
-        List<CourseDto> selectedCourses = List.of(cmbCourse.getValue());
+
+        CourseDto selectedCourse = cmbCourse.getValue();
+        if (selectedCourse == null) {
+            new Alert(Alert.AlertType.ERROR, "Please select a course").show();
+            return;
+        }
+
         try {
-           // CourseDto selectedCourse = cmbCourse.getValue();
-            if (selectedCourses == null || selectedCourses.isEmpty()) {
-                new Alert(Alert.AlertType.ERROR, "Please select a course").show();
+
+            StudentDto existingStudent = studentBO.getStudentById(lblStudentId.getText());
+            if (existingStudent == null) {
+                new Alert(Alert.AlertType.ERROR, "Student not found.").show();
                 return;
+            }
+
+            List<String> currentCourseIds = existingStudent.getCourseIds();
+            if (!currentCourseIds.contains(selectedCourse.getId())) {
+                currentCourseIds.add(selectedCourse.getId());
             }
 
             StudentDto dto = new StudentDto(
@@ -203,16 +214,16 @@ public class StudentController implements Initializable {
                     txtNic.getText(),
                     txtEmail.getText(),
                     txtPhone.getText(),
-                    selectedCourses.stream().map(CourseDto::getId).collect(Collectors.toList())
+                    currentCourseIds
             );
+
             studentBO.updateStudent(dto);
-            new Alert(Alert.AlertType.INFORMATION, "Student update successfully").show();
+            new Alert(Alert.AlertType.INFORMATION, "Student updated successfully").show();
             resetPage();
 
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to update data: " + e.getMessage()).show();
         }
-
     }
 
 

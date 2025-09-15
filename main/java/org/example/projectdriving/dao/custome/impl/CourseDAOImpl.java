@@ -1,5 +1,6 @@
 package org.example.projectdriving.dao.custome.impl;
 
+import javafx.scene.control.Alert;
 import org.example.projectdriving.config.FactoryConfiguration;
 import org.example.projectdriving.dao.custome.CourseDAO;
 import org.example.projectdriving.entity.CourseEntity;
@@ -128,15 +129,27 @@ public class CourseDAOImpl implements CourseDAO {
 
     @Override
     public List<CourseEntity> findCoursesByStudentId(String studentId) throws SQLException {
-        try (Session session = factoryConfiguration.getSession()) {
-            Query<CourseEntity> query = session.createQuery(
-                    "select e.course from EnrollmentEntity e where e.student.id = :studentId",
-                    CourseEntity.class
-            );
-            query.setParameter("studentId", studentId);
-            return query.list();
+
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+
+        try {
+            String hql = "select distinct e.course from EnrollmentEntity e where e.student.id = :studentId";
+
+            List<CourseEntity> courses = session.createQuery(hql, CourseEntity.class)
+                    .setParameter("studentId", studentId)
+                    .list();
+
+            transaction.commit();
+            return courses;
         } catch (Exception e) {
-            throw new SQLException("Failed to get courses for student " + studentId, e);
+            if(transaction != null){
+                transaction.rollback();
+            }
+            throw new SQLException("Failed to find courses by student id: " + studentId);
+
+        }finally{
+            session.close();
         }
     }
 

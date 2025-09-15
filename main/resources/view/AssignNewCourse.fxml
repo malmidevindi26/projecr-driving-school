@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projectdriving.controller.AssignNewCourseController">
+    <VBox alignment="CENTER" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <padding>
+            <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+        </padding>
+
+        <Label text="Student Course Enrollment" style="-fx-text-fill: #2D98DA;">
+            <font>
+                <Font name="Calibri Bold" size="24.0" />
+            </font>
+        </Label>
+
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="Select Student:">
+                <font>
+                    <Font name="Calibri Bold" size="13.0" />
+                </font>
+            </Label>
+            <ComboBox fx:id="cmbStudent" promptText="Select Student" HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="10.0" VBox.vgrow="ALWAYS">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Available Courses:">
+                    <font>
+                        <Font name="Calibri Bold" size="13.0" />
+                    </font>
+                </Label>
+                <ListView fx:id="lvAvailableCourses" prefHeight="150" VBox.vgrow="ALWAYS" />
+            </VBox>
+
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Enrolled Courses:">
+                    <font>
+                        <Font name="Calibri Bold" size="13.0" />
+                    </font>
+                </Label>
+                <ListView fx:id="lvEnrolledCourses" prefHeight="150" VBox.vgrow="ALWAYS" />
+            </VBox>
+        </HBox>
+
+        <Button fx:id="btnSaveEnrollment" text="Save Enrollment" onAction="#btnSaveEnrollmentOnAction" style="-fx-background-color: #26DE81;" textFill="WHITE"/>
+
+        <Button fx:id="btnReset" onAction="#btnResetOnAction" text="Reset" />
+    </VBox>
+</AnchorPane>

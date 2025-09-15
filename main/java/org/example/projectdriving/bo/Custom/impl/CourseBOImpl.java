@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CourseBOImpl implements CourseBO {
     private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
@@ -91,7 +92,8 @@ public class CourseBOImpl implements CourseBO {
         List<CourseEntity> courses = courseDAO.findCoursesByStudentId(studentId);
         return courses.stream()
                 .map(converter::getCourseDto)
-                .toList();
+                .collect(Collectors.toList());
+
     }
 
 }

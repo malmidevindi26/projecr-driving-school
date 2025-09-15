@@ -18,5 +18,5 @@ public interface StudentBO extends SuperBO {
 
     String getNextId() throws SQLException;
 
-
+    StudentDto getStudentById(String id) throws SQLException;
 }

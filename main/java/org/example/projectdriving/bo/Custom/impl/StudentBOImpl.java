@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class StudentBOImpl implements StudentBO {
     private final EntityDTOConverter converter = new EntityDTOConverter();
@@ -42,21 +44,19 @@ public boolean saveStudent(StudentDto dto) throws SQLException {
     Transaction transaction = session.beginTransaction();
 
     try {
-        // 1. Fetch all CourseEntity objects for the student
+
         List<CourseEntity> courseEntities = dto.getCourseIds().stream()
                 .map(id -> session.get(CourseEntity.class, id))
                 .toList();
 
-        // 2. Convert DTO + courses to StudentEntity
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setId(dto.getId());
         studentEntity.setFullName(dto.getFullName());
         studentEntity.setEmail(dto.getEmail());
         studentEntity.setPhone(dto.getPhone());
         studentEntity.setNic(dto.getNic());
-        studentEntity.setEnrollments(new ArrayList<>()); // initialize
+        studentEntity.setEnrollments(new ArrayList<>());
 
-        // 3. Create EnrollmentEntity for each course
         for (CourseEntity course : courseEntities) {
             EnrollmentEntity enrollment = new EnrollmentEntity();
             enrollment.setStudent(studentEntity);
@@ -64,17 +64,14 @@ public boolean saveStudent(StudentDto dto) throws SQLException {
             enrollment.setDate(new Date());
             enrollment.setAmount(course.getFee());
 
-            // Add to student's enrollment list
             studentEntity.getEnrollments().add(enrollment);
 
-            // Optional: maintain bi-directional relationship
             if (course.getEnrollments() == null) {
                 course.setEnrollments(new ArrayList<>());
             }
             course.getEnrollments().add(enrollment);
         }
 
-        // 4. Persist student (enrollments will cascade automatically)
         session.persist(studentEntity);
         transaction.commit();
         return true;
@@ -90,52 +87,40 @@ public boolean saveStudent(StudentDto dto) throws SQLException {
 
 @Override
 public boolean updateStudent(StudentDto dto) throws SQLException {
+
     Session session = factoryConfiguration.getSession();
     Transaction transaction = session.beginTransaction();
 
     try {
-        // 1. Get existing student from DB
         StudentEntity existing = session.get(StudentEntity.class, dto.getId());
         if (existing == null) {
             return false;
         }
 
-        // 2. Update basic fields
         existing.setFullName(dto.getFullName());
         existing.setEmail(dto.getEmail());
         existing.setPhone(dto.getPhone());
         existing.setNic(dto.getNic());
 
-        // 3. Fetch all CourseEntity objects for the student
-        List<CourseEntity> courseEntities = dto.getCourseIds().stream()
-                .map(id -> session.get(CourseEntity.class, id))
-                .toList();
+        List<String> currentEnrolledCourseIds = existing.getEnrollments().stream()
+                .map(e -> e.getCourse().getId())
+                .collect(Collectors.toList());
 
-        // 4. Add new enrollments if not already enrolled
-        for (CourseEntity course : courseEntities) {
-            boolean alreadyEnrolled = existing.getEnrollments().stream()
-                    .anyMatch(e -> e.getCourse().getId().equals(course.getId()));
+        for (String newCourseId : dto.getCourseIds()) {
+            if (!currentEnrolledCourseIds.contains(newCourseId)) {
+                CourseEntity course = session.get(CourseEntity.class, newCourseId);
+                if (course != null) {
+                    EnrollmentEntity enrollment = new EnrollmentEntity();
+                    enrollment.setStudent(existing);
+                    enrollment.setCourse(course);
+                    enrollment.setDate(new Date());
+                    enrollment.setAmount(course.getFee());
 
-            if (!alreadyEnrolled) {
-                EnrollmentEntity enrollment = new EnrollmentEntity();
-                enrollment.setStudent(existing);
-                enrollment.setCourse(course);
-                enrollment.setDate(new Date());
-                enrollment.setAmount(course.getFee());
-
-                existing.getEnrollments().add(enrollment);
-
-                if (course.getEnrollments() == null) {
-                    course.setEnrollments(new ArrayList<>());
+                    existing.getEnrollments().add(enrollment);
                 }
-                course.getEnrollments().add(enrollment);
             }
         }
 
-        // 5. Optionally remove enrollments for courses no longer selected
-        existing.getEnrollments().removeIf(e -> !dto.getCourseIds().contains(e.getCourse().getId()));
-
-        // 6. Merge updated student
         session.merge(existing);
         transaction.commit();
         return true;
@@ -182,6 +167,12 @@ public boolean updateStudent(StudentDto dto) throws SQLException {
             return String.format(tableChar + "%03d", nextIdNumber);
         }
         return tableChar + "001";
+    }
+
+    @Override
+    public StudentDto getStudentById(String id) throws SQLException {
+        Optional<StudentEntity> optionalStudent = studentDAO.findById(id);
+        return optionalStudent.map(converter::getStudentDto).orElse(null);
     }
 
 

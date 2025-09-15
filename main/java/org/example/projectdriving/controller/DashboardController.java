@@ -19,6 +19,7 @@ public class DashboardController implements Initializable {
     public Button btnLesson;
     public Button btnPayment;
     public AnchorPane ancMainContainer;
+    public Button btnAssign;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -29,6 +30,7 @@ public class DashboardController implements Initializable {
 
 
     public void btnStudentOnAction(ActionEvent actionEvent) {
+
         navigateTo("/view/Student.fxml");
     }
 
@@ -45,9 +47,13 @@ public class DashboardController implements Initializable {
     }
 
     public void btnPaymentOnAction(ActionEvent actionEvent) {
+
         navigateTo("/view/Payment.fxml");
     }
 
+    public void btnAssignNewOnAction(ActionEvent actionEvent) {
+        navigateTo("/view/AssignNewCourse.fxml");
+    }
     private void navigateTo(String path) {
         try {
             ancMainContainer.getChildren().clear();
@@ -64,6 +70,5 @@ public class DashboardController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
 
 }
