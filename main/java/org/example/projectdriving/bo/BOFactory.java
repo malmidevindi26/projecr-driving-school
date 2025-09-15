@@ -21,6 +21,7 @@ public class BOFactory {
             case PAYMENT ->  (T) new PaymentBOImpl();
             case COURSE -> (T) new CourseBOImpl();
             case STUDENT -> (T) new StudentBOImpl();
+            case USER ->  (T) new UserBOImpl();
         };
     }
 }

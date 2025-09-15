@@ -141,4 +141,22 @@ public class EntityDTOConverter {
         course.setDescription(dto.getDescription());
         return course;
     }
+
+    public UserDto getUserDto(UserEntity entity) {
+        return new UserDto(
+              entity.getUserId(),
+              entity.getUsername(),
+              null,
+              entity.getRole()
+        );
+    }
+
+    public UserEntity getUserEntity(UserDto dto) {
+        UserEntity entity = new UserEntity();
+        entity.setUserId(dto.getUserId());
+        entity.setUsername(dto.getUserName());
+        entity.setPassword(dto.getPassword());
+        entity.setRole(dto.getRole());
+        return entity;
+    }
 }

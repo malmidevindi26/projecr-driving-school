@@ -6,6 +6,7 @@ public enum DAOTypes {
     LESSON,
     INSTRUCTOR,
     PAYMENT,
-    ENROLLMENT
+    ENROLLMENT,
+    USER
 
 }
