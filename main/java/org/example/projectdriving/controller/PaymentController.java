@@ -243,10 +243,10 @@ public class PaymentController implements Initializable {
     }
 
     private void resetPage() throws SQLException {
-        cmbStudent.setValue(null);
-        cmbCourse.setValue(null);
-        cmbMethod.setValue(null);
-        cmbEnrollment.setValue(null);
+        cmbStudent.getSelectionModel().clearSelection();
+        cmbCourse.getSelectionModel().clearSelection();
+        cmbMethod.getSelectionModel().clearSelection();
+        cmbEnrollment.getSelectionModel().clearSelection();
         txtAmount.setText("");
         txtReference.setText("");
         cmbEnrollment.setDisable(true);

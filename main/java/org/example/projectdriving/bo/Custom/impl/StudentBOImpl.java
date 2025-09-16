@@ -40,6 +40,10 @@ public class StudentBOImpl implements StudentBO {
 
 @Override
 public boolean saveStudent(StudentDto dto) throws SQLException {
+        if (studentDAO.findByStudentNic(dto.getNic()).isPresent()) {
+            throw  new SQLException("Student with NIC " + dto.getNic() + " already exists");
+        }
+
     Session session = factoryConfiguration.getSession();
     Transaction transaction = session.beginTransaction();
 
@@ -95,6 +99,11 @@ public boolean updateStudent(StudentDto dto) throws SQLException {
         StudentEntity existing = session.get(StudentEntity.class, dto.getId());
         if (existing == null) {
             return false;
+        }
+
+        Optional<StudentEntity> nicOwner = studentDAO.findByStudentNic(dto.getNic());
+        if (nicOwner.isPresent() && !nicOwner.get().getId().equals(dto.getId())) {
+            throw new SQLException("NIC already exists for another student: " + dto.getNic());
         }
 
         existing.setFullName(dto.getFullName());

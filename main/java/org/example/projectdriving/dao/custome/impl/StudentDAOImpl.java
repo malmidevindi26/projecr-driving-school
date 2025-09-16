@@ -143,12 +143,12 @@ public class StudentDAOImpl implements StudentDAO {
 
     @Override
     public Optional<StudentEntity> findByStudentNic(String nic) throws SQLException {
-        Session session = factoryConfiguration.getSession();
-        try {
-            StudentEntity studentEntity = session.get(StudentEntity.class, nic);
-            return Optional.ofNullable(studentEntity);
-        }finally {
-            session.close();
-        }
-    }
+       try (Session session = factoryConfiguration.getSession()) {
+           Query<StudentEntity> query = session.createQuery(
+                   "from StudentEntity s where s.nic = :nic", StudentEntity.class
+           );
+           query.setParameter("nic", nic);
+           return query.uniqueResultOptional();
+       }
+       }
 }

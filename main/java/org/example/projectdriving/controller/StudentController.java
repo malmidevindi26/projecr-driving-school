@@ -147,9 +147,10 @@ public class StudentController implements Initializable {
                         new StudentTM(
                                 studentDto.getId(),
                                 studentDto.getFullName(),
+                                studentDto.getNic(),
                                 studentDto.getEmail(),
                                 studentDto.getPhone(),
-                                studentDto.getNic(),
+
                                 String.join(", ", studentDto.getCourseIds())
                         )).toList()
         ));
@@ -181,9 +182,12 @@ public class StudentController implements Initializable {
             resetPage();
 
         } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "Failed to save data: " + e.getMessage()).show();
+            if (e.getMessage().contains("already exists")) {
+                new Alert(Alert.AlertType.WARNING, "A student with this NIC already exists!").show();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Failed to save data: " + e.getMessage()).show();
+            }
         }
-
 
     }
 
@@ -222,7 +226,11 @@ public class StudentController implements Initializable {
             resetPage();
 
         } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "Failed to update data: " + e.getMessage()).show();
+            if (e.getMessage().contains("already exists")) {
+                new Alert(Alert.AlertType.WARNING, "A student with this NIC already exists!").show();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Failed to save data: " + e.getMessage()).show();
+            }
         }
     }
 

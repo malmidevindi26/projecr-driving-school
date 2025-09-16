@@ -20,6 +20,7 @@ public class DashboardController implements Initializable {
     public Button btnPayment;
     public AnchorPane ancMainContainer;
     public Button btnAssign;
+    public Button btnLogout;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -71,4 +72,20 @@ public class DashboardController implements Initializable {
         }
     }
 
+    public void btnLogoutOnAction(ActionEvent actionEvent) {
+        try {
+            javafx.stage.Stage stage = (javafx.stage.Stage) ancMainContainer.getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginPage.fxml"));
+            javafx.scene.Scene scene = new javafx.scene.Scene(loader.load());
+
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+         new Alert(Alert.AlertType.ERROR, "Page not found..!").show();
+         e.printStackTrace();
+        }
+
+    }
 }
