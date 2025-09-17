@@ -38,7 +38,7 @@ public class LoginController {
             UserDto user = userBO.authenticate(username, password);
 
             if(user != null) {
-                loadDashBoard();
+                loadDashBoard(user.getRole());
                // new Alert(Alert.AlertType.INFORMATION, "Login successful").show();
                Stage currentStage = (Stage) txtUsername.getScene().getWindow();
                currentStage.close();
@@ -51,11 +51,15 @@ public class LoginController {
         }
     }
 
-    private void loadDashBoard() throws IOException {
+    private void loadDashBoard(String role) throws IOException {
 
        try {
            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DashBboard.fxml"));
            Parent root = loader.load();
+
+           DashboardController dashboardController = loader.getController();
+
+           dashboardController.setUserRole(role);
 
            Stage dashboardStage = new Stage();
            dashboardStage.setTitle("DashBboard");

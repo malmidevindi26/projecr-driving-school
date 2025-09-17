@@ -22,6 +22,8 @@ public class DashboardController implements Initializable {
     public Button btnAssign;
     public Button btnLogout;
 
+    private String userRole;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -87,5 +89,24 @@ public class DashboardController implements Initializable {
          e.printStackTrace();
         }
 
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+        updateButtonVisibility();
+    }
+
+    private void updateButtonVisibility() {
+        if("RECEPTION".equalsIgnoreCase(userRole)) {
+            btnCourse.setOpacity(0.3);
+            btnCourse.setDisable(true);
+            btnInstructor.setOpacity(0.3);
+            btnInstructor.setDisable(true);
+        }else if("ADMIN".equalsIgnoreCase(userRole)) {
+            btnCourse.setOpacity(1.0);
+            btnCourse.setVisible(false);
+            btnInstructor.setOpacity(1.0);
+            btnInstructor.setDisable(false);
+        }
     }
 }
