@@ -40,4 +40,28 @@ public class UserDAOImpl implements UserDAO {
             session.close();
         }
     }
+
+    @Override
+    public boolean updateUser(String userId, String newUsername, String newHashedPassword) throws SQLException {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            UserEntity user = session.get(UserEntity.class, userId);
+            if(user != null) {
+                user.setUsername(newUsername);
+                user.setPassword(newHashedPassword);
+                session.merge(user);
+                transaction.commit();
+                return true;
+            }
+            return false;
+        }catch(Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw  new SQLException("Error updating user credentials" , e);
+
+        }finally {
+            session.close();
+        }
+    }
 }

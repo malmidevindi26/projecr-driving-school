@@ -3,10 +3,14 @@ package org.example.projectdriving.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.example.projectdriving.dao.SuperDAO;
+import org.example.projectdriving.dto.UserDto;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,8 +25,10 @@ public class DashboardController implements Initializable {
     public AnchorPane ancMainContainer;
     public Button btnAssign;
     public Button btnLogout;
+    public Button btnChangeCredentials;
 
     private String userRole;
+    private UserDto loggedInUser;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -91,12 +97,12 @@ public class DashboardController implements Initializable {
 
     }
 
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
-        updateButtonVisibility();
+    public void setUser(UserDto user) {
+       this.loggedInUser = user;
+        updateButtonVisibility(user.getRole());
     }
 
-    private void updateButtonVisibility() {
+    private void updateButtonVisibility(String userRole) {
         if("RECEPTION".equalsIgnoreCase(userRole)) {
             btnCourse.setOpacity(0.3);
             btnCourse.setDisable(true);
@@ -104,9 +110,29 @@ public class DashboardController implements Initializable {
             btnInstructor.setDisable(true);
         }else if("ADMIN".equalsIgnoreCase(userRole)) {
             btnCourse.setOpacity(1.0);
-            btnCourse.setVisible(false);
+            btnCourse.setDisable(false);
             btnInstructor.setOpacity(1.0);
             btnInstructor.setDisable(false);
         }
+
+    }
+
+    public void btnChangeCredentialsOnAction(ActionEvent actionEvent) {
+      try {
+          FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ChangeCredential.fxml"));
+          Parent root = loader.load();
+
+          ChangeCredentialsController controller = loader.getController();
+
+          controller.initData(loggedInUser);
+
+          Stage stage = new Stage();
+          stage.setTitle("Change Credentials");
+          stage.setScene(new Scene(root));
+          stage.show();
+      }catch(IOException e){
+          new Alert(Alert.AlertType.ERROR, "Failed to loa credentials change page..!").show();
+          e.printStackTrace();
+      }
     }
 }

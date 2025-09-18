@@ -9,4 +9,6 @@ import java.sql.SQLException;
 public interface UserDAO extends SuperDAO {
     UserEntity findByUserName(String userName)throws SQLException;
     void save(UserEntity user) throws SQLException;
+
+    boolean updateUser(String userId, String newUsername, String hashedPassword) throws SQLException;
 }

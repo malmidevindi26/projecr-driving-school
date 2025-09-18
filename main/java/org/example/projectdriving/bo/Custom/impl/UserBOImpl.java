@@ -28,4 +28,10 @@ public class UserBOImpl implements UserBO {
         UserEntity userEntity = userDAO.findByUserName(username);
         return userEntity != null;
     }
+
+    @Override
+    public boolean updateUserCredentials(String userId, String newUsername, String newPassword) throws SQLException {
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        return userDAO.updateUser(userId, newUsername, hashedPassword);
+    }
 }

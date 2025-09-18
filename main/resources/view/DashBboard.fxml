@@ -50,12 +50,17 @@
                <Cursor fx:constant="HAND" />
             </cursor>
          </Button>
-         <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnLogoutOnAction" prefWidth="200" style="-fx-background-color: transparent; -fx-text-fill: red; -fx-font-size: 16px;" text="Logout">
+         <Button fx:id="btnChangeCredentials" mnemonicParsing="false" onAction="#btnChangeCredentialsOnAction" prefWidth="200" style="-fx-background-color: transparent; -fx-text-fill: WHITE; -fx-font-size: 16px;" text="Change Credentials">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor>
          </Button>
         </VBox>
+      <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnLogoutOnAction" prefWidth="200" style="-fx-background-color: transparent; -fx-text-fill: red; -fx-font-size: 16px;" text="Logout">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
     </VBox>
 
     <!-- Main Container -->
